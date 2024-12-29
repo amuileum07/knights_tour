@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     QWidget window;
 
     // 창의 제목 설정
-    window.setWindowTitle("간단한 Qt 창");
+    window.setWindowTitle("knight's tour");
 
     // 창 크기 설정 (가로 400px, 세로 300px)
     window.resize(400, 300);
