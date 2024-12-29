@@ -3,8 +3,9 @@
 #include <stdint.h>
 #include <time.h>
 
-// XorShift-based random number generator
-uint32_t xorshift32(uint32_t *state) {
+// XorShift-based random number generator from https://en.wikipedia.org/wiki/Xorshift
+static inline uint32_t xorshift32(uint32_t *state) 
+{
     uint32_t x = *state;
     x ^= x << 13;
     x ^= x >> 17;
@@ -13,7 +14,7 @@ uint32_t xorshift32(uint32_t *state) {
     return x;
 }
 
-void num_ofcase(int** board, int size, int i, int j, int move[8], int di[], int dj[]) 
+static inline void num_ofcase(int** board, int size, int i, int j, int move[8], int di[], int dj[]) 
 {
     for (int a = 0; a <= 7; a++) 
     {
@@ -108,7 +109,7 @@ int** make_board(int n1, int n2, int* size, int* i, int* j, int* order)
     return board;
 }
 
-void free_board(int** board, int size) {
+static inline void free_board(int** board, int size) {
     for (int a = 0; a < size; a++) {
         free(board[a]);
     }
