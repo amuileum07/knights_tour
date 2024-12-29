@@ -1,5 +1,7 @@
-# binary files
-algorithm/knights_tour_Warnsdorff
+# exclude binary files
+*
+!*.*
+!*/
 
 # settings
 .vscode
