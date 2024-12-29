@@ -6,6 +6,9 @@
 # settings
 .vscode
 
+# build
+game/build
+
 # etc. files
 *.log
 *.tmp
