@@ -1,10 +1,10 @@
-/* 
-mkdir build
-cd build
-cmake ..
-make
-./simple_app
-*/
+# for building the project with cmake do the following:
+# cd ./game 
+# mkdir build
+# cd build
+# cmake ..
+# make
+# ./knights_tour_app
 
 cmake_minimum_required(VERSION 3.5)
 
