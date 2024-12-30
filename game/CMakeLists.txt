@@ -1,5 +1,3 @@
-#cd game
-#mkdir build
 #cd build
 #cmake ..
 #make
@@ -17,10 +15,14 @@ find_package(Qt5Widgets REQUIRED)
 set(SOURCES
     main.cpp
     mainwindow.cpp
+    gamewindow.cpp
+    examplewindow.cpp
 )
 
 set(HEADERS
     mainwindow.h
+    gamewindow.h
+    examplewindow.h
 )
 
 qt5_wrap_cpp(MOC_SOURCES ${HEADERS})
