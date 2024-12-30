@@ -1,5 +1,5 @@
 # for building the project with cmake do the following:
-# cd ./game 
+# cd game 
 # mkdir build
 # cd build
 # cmake ..
