@@ -5,7 +5,7 @@
 ExampleWindow::ExampleWindow(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Example Window");
-    showFullScreen();
+    setWindowState(Qt::WindowMaximized); // 전체 화면으로 전환하지만 제목 표시줄 유지
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
