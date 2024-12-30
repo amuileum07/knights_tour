@@ -162,7 +162,7 @@ void GameWindow::paintEvent(QPaintEvent *event)
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
                 QRect rect(xOffset + j * cellSize, yOffset + i * cellSize, cellSize, cellSize);
-                if (board[i][j] == 1) {
+                if (board[i][j] > 0) {
                     painter.fillRect(rect, Qt::red);
                 } else if (board[i][j] == -2) {
                     painter.fillRect(rect, Qt::green);
@@ -200,6 +200,23 @@ void GameWindow::mousePressEvent(QMouseEvent *event)
 
         int col = (x - xOffset) / cellSize;
         int row = (y - yOffset) / cellSize;
+
+        if (currentRow != -1 && currentCol != -1) {
+            bool validMove = false;
+            for (int k = 0; k < 8; ++k) {
+                int ni = currentRow + di[k];
+                int nj = currentCol + dj[k];
+                if (ni == row && nj == col) {
+                    validMove = true;
+                    break;
+                }
+            }
+
+            if (!validMove || board[row][col] > 0) {
+                QMessageBox::warning(this, "Invalid Move", "You cannot move to this position.");
+                return;
+            }
+        }
 
         if (col >= 0 && col < cols && row >= 0 && row < rows) {
             if (board[row][col] == 0) {
