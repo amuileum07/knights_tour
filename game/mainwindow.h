@@ -14,17 +14,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
 
 private:
-    QVBoxLayout *layout;
     QLabel *titleLabel;
     QPushButton *gameButton;
     QPushButton *exampleButton;
 
-    void updateTitleFontSize();
-    void resizeEvent(QResizeEvent *event) override;
-
 private slots:
     void onGameClicked();
     void onExampleClicked();
+    void updateTitleFontSize();
+    void resizeEvent(QResizeEvent *event) override;
 };
 
 #endif // MAINWINDOW_H

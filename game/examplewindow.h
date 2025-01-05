@@ -11,11 +11,13 @@ class ExampleWindow : public QWidget
 public:
     ExampleWindow(QWidget *parent = nullptr);
 
-private:
-    QLineEdit *inputField;
-
 private slots:
     void onInputFieldClicked();
+
+private:
+    QLineEdit *inputField;
 };
 
 #endif // EXAMPLEWINDOW_H
+
+

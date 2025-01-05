@@ -45,6 +45,7 @@ GameWindow::GameWindow(QWidget *parent) : QWidget(parent), rows(0), cols(0), cur
 {
     setWindowTitle("Knight Tour Game");
     setWindowState(Qt::WindowMaximized); // 전체 화면으로 전환하지만 제목 표시줄 유지
+    
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -195,8 +196,8 @@ void GameWindow::mousePressEvent(QMouseEvent *event)
         int xOffset = (width() - boardWidth) / 2;
         int yOffset = (height() - boardHeight) / 2;
 
-        int x = event->x();
-        int y = event->y();
+        int x = qRound(event->position().x());
+        int y = qRound(event->position().y());
 
         int col = (x - xOffset) / cellSize;
         int row = (y - yOffset) / cellSize;
