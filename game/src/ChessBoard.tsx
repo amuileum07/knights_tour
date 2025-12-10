@@ -140,6 +140,69 @@ export default function ChessBoard({ rows, cols, onReset }: ChessBoardProps) {
   const canUndo = path.length > 0;
   const isComplete = path.length === rows * cols && rows > 0 && cols > 0;
 
+  function handleAnswer() {
+    if (!knightPos || isComplete) return;
+
+    const moves = [
+      [2, 1],
+      [1, 2],
+      [-1, 2],
+      [-2, 1],
+      [-2, -1],
+      [-1, -2],
+      [1, -2],
+      [2, -1],
+    ];
+
+    const visitedSet = new Set<string>();
+    path.forEach((p) => visitedSet.add(`${p.row}-${p.col}`));
+
+    const total = rows * cols;
+
+    function degree(r: number, c: number, seen: Set<string>) {
+      let count = 0;
+      for (const [dr, dc] of moves) {
+        const nr = r + dr;
+        const nc = c + dc;
+        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !seen.has(`${nr}-${nc}`)) {
+          count += 1;
+        }
+      }
+      return count;
+    }
+
+    const additional: Array<{ row: number; col: number }> = [];
+    let current = { ...knightPos };
+
+    while (visitedSet.size < total) {
+      const candidates: Array<{ row: number; col: number; deg: number }> = [];
+      for (const [dr, dc] of moves) {
+        const nr = current.row + dr;
+        const nc = current.col + dc;
+        const key = `${nr}-${nc}`;
+        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !visitedSet.has(key)) {
+          candidates.push({ row: nr, col: nc, deg: degree(nr, nc, visitedSet) });
+        }
+      }
+
+      if (candidates.length === 0) break;
+
+      candidates.sort((a, b) => a.deg - b.deg);
+      const minDeg = candidates[0].deg;
+      const smallest = candidates.filter((c) => c.deg === minDeg);
+      const choice = smallest[Math.floor(Math.random() * smallest.length)];
+
+      visitedSet.add(`${choice.row}-${choice.col}`);
+      additional.push({ row: choice.row, col: choice.col });
+      current = { row: choice.row, col: choice.col };
+    }
+
+    if (additional.length > 0) {
+      setPath((prev) => [...prev, ...additional]);
+      setKnightPos(additional[additional.length - 1]);
+    }
+  }
+
   return (
     <>
       <div className="board-layout">
@@ -162,12 +225,15 @@ export default function ChessBoard({ rows, cols, onReset }: ChessBoardProps) {
             <svg className="triangle-icon" viewBox="0 0 48 48" aria-hidden="true">
               <path d="M10 4 L10 44 L42 24 Z" fill="#ffffff" stroke="#000000" strokeWidth="3" />
             </svg>
-          </button>
-          <button type="button" className="reset-btn" onClick={onReset} aria-label="초기화">
-            <span className="reset-icon" aria-hidden="true" />
-          </button>
-        </div>
+        </button>
+        <button type="button" className="reset-btn" onClick={onReset} aria-label="초기화">
+          <span className="reset-icon" aria-hidden="true" />
+        </button>
+        <button type="button" className="answer-btn" onClick={handleAnswer} disabled={!knightPos || isComplete}>
+          Answer
+        </button>
       </div>
+    </div>
       {isComplete && (
         <div className="success-panel">
           <h1>success!</h1>
