@@ -54,6 +54,7 @@ input[type="text"]:focus {
   background: #0f0f0f;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   overflow: hidden;
+  position: relative;
 }
 
 .cell {
@@ -79,9 +80,26 @@ input[type="text"]:focus {
 }
 
 .knight-icon {
-  width: 70%;
-  height: 70%;
+  width: 85%;
+  height: 85%;
   object-fit: contain;
   pointer-events: none;
   filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+}
+
+.path-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.path-lines line {
+  stroke: #ff2b2b;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.9;
 }

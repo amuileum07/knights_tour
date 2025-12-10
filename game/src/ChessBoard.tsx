@@ -8,6 +8,7 @@ interface ChessBoardProps {
 export default function ChessBoard({ rows, cols }: ChessBoardProps) {
   const [size, setSize] = useState<{ width: number; height: number }>({ width: 360, height: 360 });
   const [knightPos, setKnightPos] = useState<{ row: number; col: number } | null>(null);
+  const [path, setPath] = useState<Array<{ row: number; col: number }>>([]);
 
   useEffect(() => {
     function updateSize() {
@@ -28,6 +29,12 @@ export default function ChessBoard({ rows, cols }: ChessBoardProps) {
     return () => window.removeEventListener("resize", updateSize);
   }, [rows, cols]);
 
+  const visited = useMemo(() => {
+    const set = new Set<string>();
+    path.forEach((p) => set.add(`${p.row}-${p.col}`));
+    return set;
+  }, [path]);
+
   const reachable = useMemo(() => {
     if (!knightPos) return new Set<string>();
     const moves = [
@@ -44,12 +51,12 @@ export default function ChessBoard({ rows, cols }: ChessBoardProps) {
     for (const [dr, dc] of moves) {
       const nr = knightPos.row + dr;
       const nc = knightPos.col + dc;
-      if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+      if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !visited.has(`${nr}-${nc}`)) {
         targets.add(`${nr}-${nc}`);
       }
     }
     return targets;
-  }, [knightPos, rows, cols]);
+  }, [knightPos, rows, cols, visited]);
 
   const gridStyle: CSSProperties = {
     gridTemplateColumns: `repeat(${cols}, minmax(32px, 1fr))`,
@@ -57,6 +64,32 @@ export default function ChessBoard({ rows, cols }: ChessBoardProps) {
     width: `${size.width}px`,
     height: `${size.height}px`,
   };
+
+  function handleSelect(row: number, col: number) {
+    const key = `${row}-${col}`;
+    // First placement
+    if (!knightPos) {
+      setKnightPos({ row, col });
+      setPath([{ row, col }]);
+      return;
+    }
+    // Only allow legal unvisited moves
+    if (reachable.has(key)) {
+      setKnightPos({ row, col });
+      setPath((prev) => [...prev, { row, col }]);
+    }
+  }
+
+  const cellWidth = size.width / cols;
+  const cellHeight = size.height / rows;
+  const lines = path.slice(1).map((pos, idx) => {
+    const prev = path[idx];
+    const x1 = (prev.col + 0.5) * cellWidth;
+    const y1 = (prev.row + 0.5) * cellHeight;
+    const x2 = (pos.col + 0.5) * cellWidth;
+    const y2 = (pos.row + 0.5) * cellHeight;
+    return <line key={`line-${idx}`} x1={x1} y1={y1} x2={x2} y2={y2} />;
+  });
 
   const cells = [];
   for (let r = 0; r < rows; r += 1) {
@@ -71,13 +104,13 @@ export default function ChessBoard({ rows, cols }: ChessBoardProps) {
             isKnight ? "cell-knight" : ""
           }`}
           aria-label={`r${r + 1} c${c + 1}`}
-          onClick={() => setKnightPos({ row: r, col: c })}
+          onClick={() => handleSelect(r, c)}
           role="button"
           tabIndex={0}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
               event.preventDefault();
-              setKnightPos({ row: r, col: c });
+              handleSelect(r, c);
             }
           }}
         >
@@ -90,6 +123,9 @@ export default function ChessBoard({ rows, cols }: ChessBoardProps) {
   return (
     <div className="board-wrapper">
       <div className="chessboard" style={gridStyle}>
+        <svg className="path-lines" viewBox={`0 0 ${size.width} ${size.height}`} aria-hidden="true">
+          {lines}
+        </svg>
         {cells}
       </div>
     </div>
