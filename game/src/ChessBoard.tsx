@@ -3,9 +3,10 @@ import { useEffect, useMemo, useState, type CSSProperties } from "react";
 interface ChessBoardProps {
   rows: number;
   cols: number;
+  onReset: () => void;
 }
 
-export default function ChessBoard({ rows, cols }: ChessBoardProps) {
+export default function ChessBoard({ rows, cols, onReset }: ChessBoardProps) {
   const [size, setSize] = useState<{ width: number; height: number }>({ width: 360, height: 360 });
   const [knightPos, setKnightPos] = useState<{ row: number; col: number } | null>(null);
   const [path, setPath] = useState<Array<{ row: number; col: number }>>([]);
@@ -97,12 +98,13 @@ export default function ChessBoard({ rows, cols }: ChessBoardProps) {
       const isDark = (r + c) % 2 === 1;
       const isKnight = knightPos?.row === r && knightPos?.col === c;
       const canMoveHere = reachable.has(`${r}-${c}`);
+      const isVisited = visited.has(`${r}-${c}`);
       cells.push(
         <div
           key={`${r}-${c}`}
           className={`cell ${isDark ? "cell-dark" : "cell-light"} ${canMoveHere ? "cell-move" : ""} ${
             isKnight ? "cell-knight" : ""
-          }`}
+          } ${isVisited ? "cell-visited" : ""}`}
           aria-label={`r${r + 1} c${c + 1}`}
           onClick={() => handleSelect(r, c)}
           role="button"
@@ -120,14 +122,60 @@ export default function ChessBoard({ rows, cols }: ChessBoardProps) {
     }
   }
 
+  function handleUndo() {
+    if (path.length === 0) return;
+    if (path.length === 1) {
+      setPath([]);
+      setKnightPos(null);
+      return;
+    }
+    setPath((prev) => {
+      const next = prev.slice(0, -1);
+      const last = next[next.length - 1];
+      setKnightPos(last);
+      return next;
+    });
+  }
+
+  const canUndo = path.length > 0;
+  const isComplete = path.length === rows * cols && rows > 0 && cols > 0;
+
   return (
-    <div className="board-wrapper">
-      <div className="chessboard" style={gridStyle}>
-        <svg className="path-lines" viewBox={`0 0 ${size.width} ${size.height}`} aria-hidden="true">
-          {lines}
-        </svg>
-        {cells}
+    <>
+      <div className="board-layout">
+        <div className="board-wrapper">
+          <div className="chessboard" style={gridStyle}>
+            <svg className="path-lines" viewBox={`0 0 ${size.width} ${size.height}`} aria-hidden="true">
+              {lines}
+            </svg>
+            {cells}
+          </div>
+        </div>
+        <div className="board-controls">
+          <button
+            type="button"
+            className="triangle-btn"
+            onClick={handleUndo}
+            disabled={!canUndo}
+            aria-label="한 수 물리기"
+          >
+            <svg className="triangle-icon" viewBox="0 0 48 48" aria-hidden="true">
+              <path d="M10 4 L10 44 L42 24 Z" fill="#ffffff" stroke="#000000" strokeWidth="3" />
+            </svg>
+          </button>
+          <button type="button" className="reset-btn" onClick={onReset} aria-label="초기화">
+            <span className="reset-icon" aria-hidden="true" />
+          </button>
+        </div>
       </div>
-    </div>
+      {isComplete && (
+        <div className="success-panel">
+          <h1>success!</h1>
+          <button type="button" className="again-btn" onClick={onReset}>
+            Again?
+          </button>
+        </div>
+      )}
+    </>
   );
 }

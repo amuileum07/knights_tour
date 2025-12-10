@@ -17,13 +17,18 @@ function App() {
     setM(newM);
   }
 
+  function handleReset() {
+    setN(null);
+    setM(null);
+  }
+
   return (
     <div className="app">
       {n === null || m === null ? (
         <ChessSizeInput onChangeSize={handleSizeChange} />
       ) : (
         <section className="board-section">
-          <ChessBoard rows={n} cols={m} />
+          <ChessBoard rows={n} cols={m} onReset={handleReset} />
         </section>
       )}
     </div>

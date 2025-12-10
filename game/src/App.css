@@ -41,6 +41,14 @@ input[type="text"]:focus {
   align-items: center;
 }
 
+.board-layout {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .board-wrapper {
   width: 100%;
   display: flex;
@@ -79,6 +87,10 @@ input[type="text"]:focus {
   box-shadow: inset 0 0 0 2000px rgba(255, 68, 68, 0.25);
 }
 
+.cell-visited {
+  box-shadow: inset 0 0 0 2000px rgba(52, 199, 89, 0.35);
+}
+
 .knight-icon {
   width: 85%;
   height: 85%;
@@ -102,4 +114,92 @@ input[type="text"]:focus {
   stroke-linecap: round;
   stroke-linejoin: round;
   opacity: 0.9;
+}
+
+.board-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.triangle-btn {
+  width: 52px;
+  height: 52px;
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.triangle-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.triangle-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.triangle-icon {
+  width: 26px;
+  height: 26px;
+  transform: rotate(180deg);
+}
+
+.reset-btn {
+  padding: 0.6rem 0.9rem;
+  min-width: 90px;
+  border-radius: 10px;
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+  color: #111;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.reset-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  border-color: #7ab7ff;
+}
+
+.reset-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  background: center/contain no-repeat
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='1 4 1 10 7 10'/%3E%3Cpath d='M3.51 15a9 9 0 1 0 .49-9.5L1 10'/%3E%3C/svg%3E");
+}
+
+.success-panel {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  color: #111;
+}
+
+.again-btn {
+  padding: 0.65rem 1rem;
+  min-width: 120px;
+  border-radius: 12px;
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+  color: #111;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.again-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  border-color: #7ab7ff;
 }
